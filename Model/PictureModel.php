@@ -5,7 +5,7 @@ use	Web\Framework\Lib\Model;
 use	Web\Framework\Lib\Url;
 use Web\Framework\Lib\User;
 use Web\Framework\Lib\FileIO;
-use Web\Framework\Lib\SimpleImage;
+use Web\Framework\Tools\SimpleImage\SimpleImage;
 
 
 class PictureModel extends Model
