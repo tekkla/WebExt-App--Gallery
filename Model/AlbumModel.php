@@ -31,9 +31,9 @@ class AlbumModel extends Model
 	 * Callback function to enhance albumdata on read
 	 * @param $album The album to process
 	 */
-	public function processAlbum($album)
+	public function processAlbum(&$album)
 	{
-		// get random album image
+		// Get random album image
 		$album->image = $this->app->getModel('Picture')->getRndAlbumPicture($album->id_album);
 
 		// No album image means we have an empty album
@@ -43,15 +43,14 @@ class AlbumModel extends Model
 			$album->image->src = $this->cfg('url_images') . '/gallery_empty.jpg';
 		}
 
-		// check upload rights
-		$album->allow_upload = $this->checkGroupsUpload($album);
+		// Check upload rights
+		$this->checkGroupsUpload($album);
 
-		// check edit rights
+		// Check edit rights
 		$album->allow_edit = User::getId() == $album->id_member || $this->checkAccess('gallery_manage_album');
 
-		// create album url
+		// Create album url
 		$album->url = Url::factory('gallery_album_album', array('id_album' => $album->id_album))->getUrl();
-
 
 		return $album;
 	}
@@ -62,13 +61,10 @@ class AlbumModel extends Model
 	 */
 	public function getAlbumInfos($id_album)
 	{
-		$this->find($id_album, null, array('checkGroupsAccess', 'checkGroupsUpload'));
+		$this->find($id_album, null, array('checkGroupsAccess', 'processAlbum'));
 
 		if (!$this->hasData())
 			return false;
-
-		// user is allowed to see the gallery
-		$this->data->url = Url::factory('gallery_album_album', array('id_album' => $id_album))->getUrl();
 
 		if (!$this->data->legalinfo)
 			$this->data->legalinfo = $this->txt('legal');
@@ -99,6 +95,8 @@ class AlbumModel extends Model
 			$this->data->pictures = $this->app->getModel('Picture')->getAlbumPictures($id_album);
 		else
 			$this->data = false;
+
+		$this->processAlbum($this->data);
 
 		return $this->data;
 	}
@@ -135,17 +133,13 @@ class AlbumModel extends Model
 
 	public function checkGroupsUpload($album)
 	{
-		// False by accesscheck means also no uploadcheck neccessary
-		if (!$album)
-			return false;
-
 		// By default upload is not allowed
-		$allow_upload = false;
+		$album->allow_upload = false;
 
 		// admins get always access
 		if ($this->checkAccess('gallery_manage_album') || User::getId() == $album->id_member)
 		{
-			$allow_upload = true;
+			$album->allow_upload = true;
 		}
 		// check usergroups
 		elseif (isset($album->uploadgroups))
@@ -156,7 +150,7 @@ class AlbumModel extends Model
 			{
 				if(isset($album->uploadgroups->{$id_group}))
 				{
-					$allow_upload = true;
+					$album->allow_upload = true;
 					break;
 				}
 			}
@@ -164,12 +158,8 @@ class AlbumModel extends Model
 		// Default: deny uploads
 		else
 		{
-			$allow_upload = false;
+			$album->allow_upload = false;
 		}
-
-		$album->allow_upload = $allow_upload;
-
-		return $album;
 	}
 
 	public function convertGalleries()
@@ -302,10 +292,19 @@ class AlbumModel extends Model
 
 	public function getEdit($id_album=null)
 	{
+
+		// If user lacks of proper access rights, return false
+		if (!$this->checkAccess('gallery_manage_album'))
+		{
+			$this->data = false;
+			return $this->data;
+		}
+
 		// for info edits
 		if(isset($id_album))
 		{
-			$this->find($id_album);
+			// Load album data
+			$this->find($id_album, null, 'processAlbum');
 			$this->data->mode = 'edit';
 		}
 		else

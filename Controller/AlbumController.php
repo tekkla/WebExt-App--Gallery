@@ -36,6 +36,12 @@ class AlbumController extends Controller
 		if (!$this->model->hasData())
 			$this->model->getEdit($id_album);
 
+		// No model data means the user has no accessright to edit/add albums
+		if (!$this->model->hasData())
+		{	$url = isset($id_album) ? Url::factory( 'gallery_album_album', array('id_album' => $id_album)) : Url::factory( 'gallery_album_index');
+			redirectexit($url->getUrl());
+		}
+
 		// ------------------------------
 		// TEXT
 		// ------------------------------
