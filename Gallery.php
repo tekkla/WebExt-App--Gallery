@@ -86,50 +86,59 @@ final class Gallery extends App
 	);
 
 	public $routes = array(
-		'album_index' => array(
-			'route' => '',
+		array(
+		    'name' => 'album_index',
+			'route' => '/',
 			'ctrl' => 'album',
 			'action' => 'gallery'
 		),
-		'album_album' => array(
+	    array(
+	        'name' => 'album_album',
 			'route' => '/[i:id_album]',
 			'ctrl' => 'album',
 			'action' => 'index'
 		),
-		'album_new' => array(
+		array(
+		    'name' => 'album_new',
 			'method' => 'GET|POST',
 			'route' => '/new',
 			'ctrl' => 'album',
 			'action' => 'edit'
 		),
-		'album_edit' => array(
+		array(
+		    'name' => 'album_edit',
 			'method' => 'GET|POST',
 			'route' => '/[i:id_album]/edit',
 			'ctrl' => 'album',
 			'action' => 'edit'
 		),
-		'album_delete' => array(
+		array(
+		    'name' => 'album_delete',
 			'method' => 'GET',
 			'route' => '[i:id_album]/delete',
 			'ctrl' => 'album',
 			'action' => 'delete'
 		),
-		'picture' => array(
+		array(
+		    'name' => 'picture',
 			'route' => '/picture/[i:id_picture]',
 			'ctrl' => 'picture',
 			'action' => 'index'
 		),
-		'picture_edit' => array(
+		array(
+		    'name' => 'picture_edit',
 			'route' => '/picture/[i:id_picture]/edit',
 			'ctrl' => 'picture',
 			'action' => 'edit'
 		),
-		'picture_random' => array(
+		array(
+		    'name' => 'picture_random',
 			'route' => '/picture/random',
 			'ctrl' => 'picture',
 			'action' => 'random',
 		),
-		'picture_upload' => array(
+		array(
+		    'name' => 'picture_upload',
 			'method' => 'GET|POST',
 			'route' => '/upload/[i:id_album]?',
 			'ctrl' => 'picture',
