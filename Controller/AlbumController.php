@@ -219,7 +219,6 @@ final class AlbumController extends Controller
 						'gallery_picture_upload',
 						array('id_album' => $id_album)
 					)
-					->setType('imgbutton')
 					->setIcon('upload')
 					->setText($this->txt('picture_upload'))
 				);
@@ -231,7 +230,6 @@ final class AlbumController extends Controller
 						'gallery_album_edit',
 						array('id_album' => $id_album)
 					)
-					->setType('imgbutton')
 					->setIcon('edit')
 					->setText($this->txt('album_edit'))
 				);
@@ -241,7 +239,6 @@ final class AlbumController extends Controller
 						'gallery_album_delete',
 						array('id_album' => $id_album)
 					)
-					->setType('imgbutton')
 					->setIcon('trash-o')
 					->setText($this->txt('album_delete'))
 					->setConfirm($this->txt('album_delete'))
