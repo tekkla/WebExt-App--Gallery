@@ -3,19 +3,30 @@ namespace Web\Apps\Gallery\View;
 
 use Web\Framework\Lib\View;
 
+/**
+ * Album view
+ * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
+ * @package App Gallery
+ * @subpackage View/Album
+ * @license BSD
+ * @copyright 2014 by author
+ */
 class AlbumView extends View
 {
 	public function Gallery()
 	{
 		echo '
-		<div class="app-gallery-index">
-			<h1>' . $this->headline . '</h1>';
+		<div class="app-gallery-index">';
 
 		if (isset($this->btn_add))
 			echo $this->btn_add;
 
-		echo '
-		<p class="lead">' . $this->intro . '</p>';
+			echo '
+			<h1>' . $this->headline . '</h1>';
+
+		if ($this->intro)
+			echo '
+			<p class="lead">' . $this->intro . '</p>';
 
 		if ($this->grid != 12)
 			echo '

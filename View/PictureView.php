@@ -3,7 +3,15 @@ namespace Web\Apps\Gallery\View;
 
 use Web\Framework\Lib\View;
 
-class PictureView extends View
+/**
+ * Picture view
+ * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
+ * @package App Gallery
+ * @subpackage View/Picture
+ * @license BSD
+ * @copyright 2014 by author
+ */
+final class PictureView extends View
 {
 	public function Random()
 	{

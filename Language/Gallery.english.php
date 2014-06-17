@@ -1,70 +1,63 @@
 <?php
-// Version: 2.0; Gallery
+// Version: 2.1; Gallery
 
-$txt['app_gallery_name'] = 'Bildergalerie';
+$txt['app_gallery_name'] = 'Gallery';
 
-// ----------------------------------------------------------------------------
-// PERMISSIONS
-// ----------------------------------------------------------------------------
+// Permissions
+$txt['permissiongroup_gallery_classic_perm'] = 'WebExt: Gallery';
+$txt['permissiongroup_simple_gallery_simple_perm'] = 'WebExt: Gallery';
+$txt['permissionname_gallery_perm_manage_album'] = 'Manage album';
+$txt['permissionhelp_gallery_perm_manage_album'] = 'Allows create, edit and delete of all albums.';
+$txt['permissionname_gallery_perm_manage_image'] = 'Manage pictures';
+$txt['permissionhelp_gallery_perm_manage_image'] = 'Allows edit and delete of all pictures.';
 
-$txt['permissiongroup_gallery_classic_perm'] = 'App: Galerie administrieren';
-$txt['permissiongroup_simple_gallery_simple_perm'] = 'App: Galerie administrieren';
-$txt['permissionname_gallery_perm_manage_album'] = 'Alben managen';
-$txt['permissionhelp_gallery_perm_manage_album'] = 'Gestattet das Anlegen, Anpassen und Löschen von Alben.';
-$txt['permissionname_gallery_perm_manage_image'] = 'Bilder managen';
-$txt['permissionhelp_gallery_perm_manage_image'] = 'Gestattet das die Verwaltung von Bildern mit den Rechten ihrew Daten zu verändern oder auch ganze Bilder zu löschen.';
-
-// ----------------------------------------------------------------------------
-// ALBUM
-// ----------------------------------------------------------------------------
-
-$txt['app_gallery_headline'] = 'Bildergalerie';
-$txt['app_gallery_upload'] = 'Bild hochladen';
-$txt['app_gallery_intro'] = 'Die Bildergalerie ist Teil unseres Communitysystems. Einige Galerien sind nur unseren Raid-/Gildenmitgliedern für Uploads vorbehalten, andere hingegen können von allen registrierten Benutzen mit Bildern gefüttert werden. Wir freuen uns über jedes neue Bild und wünschen mit diesem Communitymodul viel Spass!';
-$txt['app_gallery_legal'] = '<span class="strong">Rechtlicher Hinweis:</span> Sollten Rechte Dritter durch die hier veröffentlichten Bilder verletzt werden, so liegt dies nicht in unserem Interesse. Wir kontrollieren in regelmäßigen Abständen die Galerien auf ihren Inhalt, sind aber auch nicht 24/7 dabei auf nicht zulässiges Material zu lauern. Wenn etwas nicht passen sollte, dann unter der im Impressum angegebenen Kontaktmöglichkeit melden und wir kümmern uns umgehend darum. Anstößige Bilder, Bilder mit verbotenen Motiven oder Bilder mit pornografischem Inhalt werden von uns kommentarlos gelöscht und der Useraccount des Uploaders gebannt!';
-$txt['app_gallery_pictures'] = 'Bilder';
-$txt['app_gallery_nopics'] = 'Keine Bilder in dieser Galerie vorhanden.';
+// Album
+$txt['app_gallery_headline'] = 'Gallery';
+$txt['app_gallery_upload'] = 'Upload picture';
+$txt['app_gallery_intro'] = '';
+$txt['app_gallery_legal'] = '';
+$txt['app_gallery_pictures'] = 'Pictures';
+$txt['app_gallery_nopics'] = 'No pictures in this album.';
 $txt['app_gallery_without_title'] = '<ohne Titel>';
-
 $txt['app_gallery_album'] = 'Album';
-$txt['app_gallery_album_headline_info'] = 'Albuminformationen';
-$txt['app_gallery_album_title'] = 'Titel';
-$txt['app_gallery_album_description'] = 'Beschreibung';
-$txt['app_gallery_album_category'] = 'Albumgruppe';
+$txt['app_gallery_album_headline_info'] = 'Album informations';
+$txt['app_gallery_album_title'] = 'Title';
+$txt['app_gallery_album_description'] = 'Description';
+$txt['app_gallery_album_category'] = 'Album group';
 $txt['app_gallery_album_tags'] = 'Tags';
-$txt['app_gallery_album_notes'] = 'interne Notizen';
-$txt['app_gallery_album_legalinfo'] = 'rechtliche Hinweise';
-$txt['app_gallery_album_new'] = 'Neues Album';
-$txt['app_gallery_album_edit'] = 'Album bearbeiten';
-
-$txt['app_gallery_album_headline_access'] = 'Benutzerrechte';
-$txt['app_gallery_album_accessgroups'] = 'Album ansehen';
-$txt['app_gallery_accessgroups_help'] = 'Diese Gruppen haben Zugriff auf das Album. Wenn keine Gruppe/n gewählt wurden, dann wird das Album nicht in der Galerie angezeit.';
-$txt['app_gallery_album_uploadgroups'] = 'Bilder hochladen';
-$txt['app_gallery_uploadroups_help'] = 'Diese Gruppen dürfen Bilder in das Album hochladen.';
-$txt['app_gallery_album_headline_options'] = 'Optionen';
-$txt['app_gallery_album_anonymous'] = 'Anonyme Bilder';
-$txt['app_gallery_album_scoring'] = 'Scoring aktiv?';
-$txt['app_gallery_album_img_per_user'] = 'Bilder pro User';
+$txt['app_gallery_album_notes'] = 'Internal notes';
+$txt['app_gallery_album_legalinfo'] = 'Legal informations';
+$txt['app_gallery_album_new'] = 'New album';
+$txt['app_gallery_album_edit'] = 'Edit album';
+$txt['app_gallery_album_delete'] = 'Delete album';
+$txt['app_gallery_album_headline_upload'] = 'Upload';
+$txt['app_gallery_album_upload_not_active'] = 'Upload is inactive because of not selected MIME types in app config';
+$txt['app_gallery_album_mime_types'] = 'Allowed mime types';
+$txt['app_gallery_mime_type_help'] = 'Select MIME-types allowed to be uploaded. If none is selected, the upload will be deactivated.';
+$txt['app_gallery_album_headline_access'] = 'Userrights';
+$txt['app_gallery_album_accessgroups'] = 'View album';
+$txt['app_gallery_accessgroups_help'] = 'Selected groups are allowed to see this album. No selected group means to hide this album from public (except admins and owner)';
+$txt['app_gallery_album_uploadgroups'] = 'Upload pictures';
+$txt['app_gallery_uploadroups_help'] = 'Selected groups are allowed to upload pictures.';
+$txt['app_gallery_album_headline_options'] = 'Options';
+$txt['app_gallery_album_anonymous'] = 'Anonym pictures';
+$txt['app_gallery_album_scoring'] = 'Scoring active?';
+$txt['app_gallery_album_img_per_user'] = 'Pictures per user';
 
 // Errors
-$txt['app_gallery_album_error_title_already_exists'] = 'Dieser Albumtitel ist bereits vergeben.';
-
-// ----------------------------------------------------------------------------
-// PICTURE
-// ----------------------------------------------------------------------------
+$txt['app_gallery_album_error_title_already_exists'] = 'This album title is already in use.';
 
 // Display
-$txt['app_gallery_rnd_image'] = 'Zufallsbild';
-$txt['app_gallery_title'] = 'Titel';
-$txt['app_gallery_description'] = 'Beschreibung';
-$txt['app_gallery_from_gallery'] = 'Aus Galerie';
-$txt['app_gallery_picturedata'] = 'Bildinformationen';
-$txt['app_gallery_filesize'] = 'Dateigröße';
+$txt['app_gallery_rnd_image'] = 'Random picture';
+$txt['app_gallery_title'] = 'Title';
+$txt['app_gallery_description'] = 'Description';
+$txt['app_gallery_from_gallery'] = 'From gallery';
+$txt['app_gallery_picturedata'] = 'Picture infos';
+$txt['app_gallery_filesize'] = 'Filesize';
 $txt['app_gallery_uploader'] = 'Uploader';
-$txt['app_gallery_dimension'] = 'Abmessungen';
-$txt['app_gallery_date_upload'] = 'Datum/Zeit';
-$txt['app_gallery_gallerydata'] = 'Zugehörige Galerie';
+$txt['app_gallery_dimension'] = 'Sizes';
+$txt['app_gallery_date_upload'] = 'Date/Time';
+$txt['app_gallery_gallerydata'] = 'Gallery infos';
 $txt['app_gallery_imgurl'] = 'URLs';
 $txt['app_gallery_imgurl_original'] = 'Orginal';
 $txt['app_gallery_imgurl_medium'] = 'Medium';
@@ -72,43 +65,36 @@ $txt['app_gallery_imgurl_thumb'] = 'Thumb';
 $txt['app_gallery_optional'] = 'Optional';
 
 // Upload
-$txt['app_gallery_optional_info'] = 'Du kannst für das Bild einen Titel und eine Beschreibung angeben. Beides ist optional. Wenn kein Titel angegeben wird, dann wird der Dateiname des Bildes (ohne Endung) als Bildername verwendet.';
-$txt['app_gallery_picture_id_album'] = 'Album';
-$txt['app_gallery_picture_upload'] = 'Bild hochladen';
-$txt['app_gallery_picture_title'] = 'Bildtitel';
-$txt['app_gallery_picture_description'] = 'Beschreibung';
-
-$txt['app_gallery_max_upload_size'] = 'Maximale Dateigröße: %s (%d Bytes)';
-
+$txt['app_gallery_optional_info'] = 'Feel free to provide a title and a description for the picture. It\'s both optional. If no name is provided the name of the uploaded file will be taken as title.';
+$txt['app_gallery_picture_id_album'] = 'Gallery';
+$txt['app_gallery_picture_upload'] = 'Upload picture';
+$txt['app_gallery_picture_title'] = 'Title';
+$txt['app_gallery_picture_description'] = 'Description';
+$txt['app_gallery_max_upload_size'] = 'max Filesize: %s (%d Bytes)';
 $txt['app_gallery_upload_error_0'] = 'There is no error, the file uploaded with success';
-$txt['app_gallery_upload_error_1'] = 'Die hochgeladene Datei ist größer als erlaubt.';
+$txt['app_gallery_upload_error_1'] = 'Fileszie of uploaded file exceeds allowed filesize.';
 $txt['app_gallery_upload_error_2'] = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
-$txt['app_gallery_upload_error_3'] = 'Die Datei wurde nicht vollständig hochgeladen.';
-$txt['app_gallery_upload_error_4'] = 'Es wurde keine Datei hochgeladen.';
-$txt['app_gallery_upload_error_6'] = 'Der Temp-Ordner konnte nicht gefunden werden.';
-$txt['app_gallery_file_already_exists'] = 'Die Datei "%s" existiert bereits.';
-$txt['app_gallery_upload_is_no_image'] = 'Die hochgeladene Datei ist keine gültige Bilddatei.';
+$txt['app_gallery_upload_error_3'] = 'Upload hasn\'t been finished.';
+$txt['app_gallery_upload_error_4'] = 'No file uploaded.';
+$txt['app_gallery_upload_error_6'] = 'Temp folder couldn\'t be found';
+$txt['app_gallery_file_already_exists'] = 'The file "%s" already exists.';
+$txt['app_gallery_upload_is_no_image'] = 'The uploaded file is no image.';
+$txt['app_gallery_upload_mime_type_not_allowed'] = 'The MIME-Type of uploaded file was not accepted.';
 
-
-// ----------------------------------------------------------------------------
-// CONFIG
-// ----------------------------------------------------------------------------
-$txt['app_gallery_cfg_group_display'] = 'Darstellung';
-$txt['app_gallery_cfg_grid'] = 'Grid';
-$txt['app_gallery_cfg_grid_desc'] = 'Größe der Galerie- und Bilderübersichten. Wird 1 gewählt, dann wird die Gridansicht  deaktiviert.';
-$txt['app_gallery_cfg_group_paths'] = 'Pfade';
-$txt['app_gallery_cfg_path'] = 'Verzeichnis';
-$txt['app_gallery_cfg_path_desc'] = 'Verzeichnis innerhalb des SMF Ordners an dem sich die Galerie befindet.';
-$txt['app_gallery_cfg_group_upload'] = 'Upload Einstellungen';
+// Config
+$txt['app_gallery_cfg_group_display'] = 'Display';
+$txt['app_gallery_cfg_grid'] = 'Grid size';
+$txt['app_gallery_cfg_grid_desc'] = 'Size of grid on gallery and album index. Select 1 to deactivate grid view.';
+$txt['app_gallery_cfg_group_upload'] = 'Upload settings';
 $txt['app_gallery_cfg_upload_mime_types'] = 'Mime-Types';
-$txt['app_gallery_cfg_upload_mime_types_desc'] = 'Die für den Upload zulässigen Mime-Types. Wenn keine Auswahl getroffen wird, dann wird der Upload deaktiviert.';
-$txt['app_gallery_cfg_upload_no_overwrite'] = 'Überschreiben verbieten';
-$txt['app_gallery_cfg_upload_no_overwrite_desc'] = 'Wenn aktiviert, dann werden die Dateiname hochgeladener Bilder um eine eindeutige ID erweitert. Dies verhinder, dass ein bereits mit dem Namen vorhandenes Bild überschrieben wird.';
+$txt['app_gallery_cfg_path'] = 'Gallery directory';
+$txt['app_gallery_cfg_path_desc'] = 'Directory of gallery inside SMF folder.';
+$txt['app_gallery_cfg_upload_mime_types_desc'] = 'Select the MIME-types which are allowed to be uploaded. This selection is the general setting which MIMI-type are uploadable in the galleries. Without any selection, uploads will be turned off gallery wide.';
 $txt['app_gallery_cfg_group_thumbnail'] = 'Thumbnails';
-$txt['app_gallery_cfg_thumbnail_use'] = 'Thumbnails nutzen';
-$txt['app_gallery_cfg_thumbnail_use_desc'] = 'Wenn aktiv, dann wird von jedem hochgeladenen Bild ein Thumbnail mit den nachfolgenden Einstellungen angelegt.';
-$txt['app_gallery_cfg_thumbnail_width'] = 'Thumbnail Breite (in px)';
-$txt['app_gallery_cfg_thumbnail_width_desc'] = 'Breite der zu erstellenden Thumnails in Pixel.';
-$txt['app_gallery_cfg_thumbnail_quality'] = 'Thumbnail JPEG-Qualität (1-100)';
-$txt['app_gallery_cfg_thumbnail_quality_desc'] = 'Legt die Qualität für die Thumbnails fest. Dieser wert entspricht den %-Angaben für JPEG Kompression.';
+$txt['app_gallery_cfg_thumbnail_use'] = 'Use thumbnails';
+$txt['app_gallery_cfg_thumbnail_use_desc'] = 'When active a thumbnail of an uploaded image will be created with the settings below.';
+$txt['app_gallery_cfg_thumbnail_width'] = 'Thumbnail width';
+$txt['app_gallery_cfg_thumbnail_width_desc'] = 'Defines the with of the thumbnail to create in pixel.';
+$txt['app_gallery_cfg_thumbnail_quality'] = 'Thumbnail JPEG quality (1-100)%';
+$txt['app_gallery_cfg_thumbnail_quality_desc'] = 'Defines quality of thumbnail. The value represents the percentage used for jpeg compression.';
 ?>

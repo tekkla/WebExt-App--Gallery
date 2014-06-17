@@ -1,31 +1,24 @@
 <?php
-// Version: 2.0; Gallery
+// Version: 2.1; Gallery
 
 $txt['app_gallery_name'] = 'Bildergalerie';
 
-// ----------------------------------------------------------------------------
-// PERMISSIONS
-// ----------------------------------------------------------------------------
-
-$txt['permissiongroup_gallery_classic_perm'] = 'App: Galerie administrieren';
-$txt['permissiongroup_simple_gallery_simple_perm'] = 'App: Galerie administrieren';
+// Permissions
+$txt['permissiongroup_gallery_classic_perm'] = 'WebExt: Galerie';
+$txt['permissiongroup_simple_gallery_simple_perm'] = 'WebExt: Galerie administrieren';
 $txt['permissionname_gallery_perm_manage_album'] = 'Alben managen';
 $txt['permissionhelp_gallery_perm_manage_album'] = 'Gestattet das Anlegen, Anpassen und Löschen von Alben.';
 $txt['permissionname_gallery_perm_manage_image'] = 'Bilder managen';
 $txt['permissionhelp_gallery_perm_manage_image'] = 'Gestattet das die Verwaltung von Bildern mit den Rechten ihrew Daten zu verändern oder auch ganze Bilder zu löschen.';
 
-// ----------------------------------------------------------------------------
-// ALBUM
-// ----------------------------------------------------------------------------
-
+// Album
 $txt['app_gallery_headline'] = 'Bildergalerie';
 $txt['app_gallery_upload'] = 'Bild hochladen';
-$txt['app_gallery_intro'] = 'Die Bildergalerie ist Teil unseres Communitysystems. Einige Galerien sind nur unseren Raid-/Gildenmitgliedern für Uploads vorbehalten, andere hingegen können von allen registrierten Benutzen mit Bildern gefüttert werden. Wir freuen uns über jedes neue Bild und wünschen mit diesem Communitymodul viel Spass!';
-$txt['app_gallery_legal'] = '<span class="strong">Rechtlicher Hinweis:</span> Sollten Rechte Dritter durch die hier veröffentlichten Bilder verletzt werden, so liegt dies nicht in unserem Interesse. Wir kontrollieren in regelmäßigen Abständen die Galerien auf ihren Inhalt, sind aber auch nicht 24/7 dabei auf nicht zulässiges Material zu lauern. Wenn etwas nicht passen sollte, dann unter der im Impressum angegebenen Kontaktmöglichkeit melden und wir kümmern uns umgehend darum. Anstößige Bilder, Bilder mit verbotenen Motiven oder Bilder mit pornografischem Inhalt werden von uns kommentarlos gelöscht und der Useraccount des Uploaders gebannt!';
+$txt['app_gallery_intro'] = '';
+$txt['app_gallery_legal'] = '';
 $txt['app_gallery_pictures'] = 'Bilder';
 $txt['app_gallery_nopics'] = 'Keine Bilder in dieser Galerie vorhanden.';
 $txt['app_gallery_without_title'] = '<ohne Titel>';
-
 $txt['app_gallery_album'] = 'Album';
 $txt['app_gallery_album_headline_info'] = 'Albuminformationen';
 $txt['app_gallery_album_title'] = 'Titel';
@@ -36,7 +29,11 @@ $txt['app_gallery_album_notes'] = 'interne Notizen';
 $txt['app_gallery_album_legalinfo'] = 'rechtliche Hinweise';
 $txt['app_gallery_album_new'] = 'Neues Album';
 $txt['app_gallery_album_edit'] = 'Album bearbeiten';
-
+$txt['app_gallery_album_delete'] = 'Album löschen';
+$txt['app_gallery_album_headline_upload'] = 'Upload';
+$txt['app_gallery_album_upload_not_active'] = 'Uploads sind deaktiviert, da in der Appkonfiguration keine erlaubten MIME-Typen gewählt wurden.';
+$txt['app_gallery_album_mime_types'] = 'Erlaubte MIME-Typen';
+$txt['app_gallery_mime_type_help'] = 'Gewählte MIME-Typen sind für den Upload erlaubt. Werden keine Typen ausgwählt, dann ist der Upload generell deaktiviert.';
 $txt['app_gallery_album_headline_access'] = 'Benutzerrechte';
 $txt['app_gallery_album_accessgroups'] = 'Album ansehen';
 $txt['app_gallery_accessgroups_help'] = 'Diese Gruppen haben Zugriff auf das Album. Wenn keine Gruppe/n gewählt wurden, dann wird das Album nicht in der Galerie angezeit.';
@@ -49,10 +46,6 @@ $txt['app_gallery_album_img_per_user'] = 'Bilder pro User';
 
 // Errors
 $txt['app_gallery_album_error_title_already_exists'] = 'Dieser Albumtitel ist bereits vergeben.';
-
-// ----------------------------------------------------------------------------
-// PICTURE
-// ----------------------------------------------------------------------------
 
 // Display
 $txt['app_gallery_rnd_image'] = 'Zufallsbild';
@@ -77,9 +70,7 @@ $txt['app_gallery_picture_id_album'] = 'Album';
 $txt['app_gallery_picture_upload'] = 'Bild hochladen';
 $txt['app_gallery_picture_title'] = 'Bildtitel';
 $txt['app_gallery_picture_description'] = 'Beschreibung';
-
 $txt['app_gallery_max_upload_size'] = 'Maximale Dateigröße: %s (%d Bytes)';
-
 $txt['app_gallery_upload_error_0'] = 'There is no error, the file uploaded with success';
 $txt['app_gallery_upload_error_1'] = 'Die hochgeladene Datei ist größer als erlaubt.';
 $txt['app_gallery_upload_error_2'] = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form';
@@ -89,10 +80,7 @@ $txt['app_gallery_upload_error_6'] = 'Der Temp-Ordner konnte nicht gefunden werd
 $txt['app_gallery_file_already_exists'] = 'Die Datei "%s" existiert bereits.';
 $txt['app_gallery_upload_is_no_image'] = 'Die hochgeladene Datei ist keine gültige Bilddatei.';
 
-
-// ----------------------------------------------------------------------------
-// CONFIG
-// ----------------------------------------------------------------------------
+// Config
 $txt['app_gallery_cfg_group_display'] = 'Darstellung';
 $txt['app_gallery_cfg_grid'] = 'Grid';
 $txt['app_gallery_cfg_grid_desc'] = 'Größe der Galerie- und Bilderübersichten. Wird 1 gewählt, dann wird die Gridansicht  deaktiviert.';

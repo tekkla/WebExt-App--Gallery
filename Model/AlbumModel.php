@@ -3,19 +3,26 @@ namespace Web\Apps\Gallery\Model;
 
 use Web\Framework\Lib\Url;
 use Web\Framework\Lib\Model;
-use Web\Framework\Lib\Image;
 use Web\Framework\Lib\User;
 use Web\Framework\Lib\Data;
 use Web\Framework\Lib\FileIO;
 
-class AlbumModel extends Model
+/**
+ * Album model
+ * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
+ * @package App Gallery
+ * @subpackage Model/Album
+ * @license BSD
+ * @copyright 2014 by author
+ */
+final class AlbumModel extends Model
 {
-	public $tbl = 'app_gallery_albums';
-	public $alias = 'album';
-	public $afterCreate = array('createPath');
-	public $serialized = array('accessgroups', 'uploadgroups');
+	protected $tbl = 'app_gallery_albums';
+	protected $alias = 'album';
+	protected $afterCreate = array('createPath');
+	protected $serialized = array('accessgroups', 'uploadgroups', 'mime_types');
 	public $validate = array(
-		'title' => 'empty'
+		'title' => array('empty')
 	);
 
 	/**
@@ -34,7 +41,7 @@ class AlbumModel extends Model
 	public function processAlbum(&$album)
 	{
 		// Get random album image
-		$album->image = $this->app->getModel('Picture')->getRndAlbumPicture($album->id_album);
+		$album->image = $this->getModel('Picture')->getRndAlbumPicture($album->id_album);
 
 		// No album image means we have an empty album
 		if (!$album->image)
@@ -69,30 +76,70 @@ class AlbumModel extends Model
 		if (!$this->data->legalinfo)
 			$this->data->legalinfo = $this->txt('legal');
 
+		// Check for differences in set MIME-types and app wide MIME-types
+		if (!$this->cfg('upload_mime_types') && $this->data->mime_types)
+		{
+			// Remove set MIME-types from album
+			$this->updateMimeTypes($id_album);
+		}
+
+		// Compare config MIME-types and album MIME-types
+		if ($this->cfg('upload_mime_types') && $this->data->mime_types)
+		{
+			$to_unset = array_diff($this->data->mime_types->getProperties(), $this->cfg('upload_mime_types')->getProperties());
+
+			foreach ($to_unset as $unset)
+				unset($this->data->mime_types->$unset);
+
+			$this->updateMimeTypes($id_album, $this->data->mime_types);
+		}
+
 		return $this->data;
 	}
+
+	/**
+	 * Updates MIME-types field of a specific album by the types given.
+	 * @param int $id_album Id of album
+	 * @param null|Data $mime_types Optional MIME-types to store.
+	 */
+	private function updateMimeTypes($id_album, $mime_types=null)
+	{
+		$model = $this->getModel();
+
+		$model->data = new Data();
+		$model->data->id_album = $id_album;
+		$model->data->mime_types = isset($mime_types) ? $mime_types : 'NULL';
+
+		$model->save(false);
+ 	}
 
 	/**
 	 * Get album ids the current user can access
 	 */
 	public function getAlbumIDs()
 	{
-		$this->setField(array(
-			'id_album',
-			'accessgroups'
-		));
+		$this->read(array(
+			'type' => '*',
+			'field' => array(
+				'id_album',
+				'accessgroups'
+			)
+		), 'checkGroupsAccess');
 
-		$this->read('*', 'checkGroupsAccess');
-
-		return array_keys(get_object_vars($this->data));
+		return $this->data->keys();
 	}
 
+	/**
+	 * Returns data of a specific album
+	 * @param int $id_album Id of album
+	 * @return \Web\Framework\Lib\Data
+	 */
 	public function getAlbum($id_album)
 	{
 		$this->getAlbumInfos($id_album);
 
 		if($this->hasData())
-			$this->data->pictures = $this->app->getModel('Picture')->getAlbumPictures($id_album);
+			$this->data->pictures = $this->getModel('Picture')->getAlbumPictures($id_album);
 		else
 			$this->data = false;
 
@@ -101,6 +148,12 @@ class AlbumModel extends Model
 		return $this->data;
 	}
 
+	/**
+	 * Callback method check useracces on an album.
+	 * Returns the $album on positive access or FALSE when accescheck failed.
+	 * @param \Web\Framework\Lib\Data $album
+	 * @return \Web\Framework\Lib\Data|boolean
+	 */
 	public function checkGroupsAccess($album)
 	{
 		// Admins get always access
@@ -131,6 +184,22 @@ class AlbumModel extends Model
 		return false;
 	}
 
+	/**
+	 * Checks the album on set mime types to determine if upload is active or not.
+	 * @param int $id_album Id of album
+	 * @return boolean
+	 */
+	public function checkUploadActive($id_album)
+	{
+		return isset($this->getModel()->find($id_album)->mime_types);
+	}
+
+	/**
+	 * Callback method to check upload rights of user.
+	 * Takes care of set mime types to deactivate upload when nothing is set.
+	 * @param \Web\Framework\Lib\Data $album Album to process
+	 * @return \Web\Framework\Lib\Data
+	 */
 	public function checkGroupsUpload($album)
 	{
 		// By default upload is not allowed
@@ -160,136 +229,20 @@ class AlbumModel extends Model
 		{
 			$album->allow_upload = false;
 		}
+
+		// Regardless what was set for upload before.
+		// No MIME-types set means no upload at all!
+		if (!isset($album->mime_types))
+			$album->allow_upload = false;
+
+		return $album;
 	}
 
-	public function convertGalleries()
-	{
-		// get galleries from db
-		$galleries = $this->read();
-
-		// update each of them
-		foreach($galleries as $album)
-		{
-			// create a readable dir name for gallery
-			#if ($album->dir_name)
-			#	continue;
-
-			echo '<hr>converting gallery: ' . $album->title .'<br>';
-
-			// get current title for usage as dirname of gallery
-			$title = $album->title;
-
-			$dir_name = preg_replace('/\%/',' percentage',$title);
-			$dir_name = preg_replace('/\@/',' at ',$dir_name);
-			$dir_name = preg_replace('/\&/',' and ',$dir_name);
-			$dir_name = preg_replace('/\s[\s]+/','-',$dir_name);    // Strip off multiple spaces
-			$dir_name = preg_replace('/[\s\W]+/','-',$dir_name);    // Strip off spaces and non-alpha-numeric
-			$dir_name = preg_replace('/^[\-]+/','',$dir_name); // Strip off the starting hyphens
-			$dir_name = preg_replace('/[\-]+$/','',$dir_name); // // Strip off the ending hyphens
-			#$dir_name = strtolower($dir_name);
-
-			// dir name complete, store it as value
-			$album->dir_name = $dir_name;
-
-			// create absolute path of gallery dir
-			$path_gallery = $this->cfg('dir_album') . $dir_name;
-			$path_thumbs = $path_gallery . '/thumbs';
-			$path_medium = $path_gallery . '/medium';
-
-			// if path does not exist, create it
-			if (!file_exists($path_gallery))
-			{
-				echo 'creating path ... ' . $path_gallery . '<br>';
-				mkdir($path_gallery);
-
-				// per default we have a thumbs dir in each gallery.
-				mkdir($path_thumbs);
-
-				mkdir($path_medium);
-			}
-
-			// create thumb dir if not existing.
-			if (!file_exists($path_thumbs))
-			{
-				echo 'creating thumbs path ... ' . $path_thumbs . '<br>';
-				mkdir($path_thumbs);
-			}
-
-			// create thumb dir if not existing.
-			if (!file_exists($path_medium))
-			{
-				echo 'creating medium path ... ' . $path_medium . '<br>';
-				mkdir($path_medium);
-			}
-
-			// get the images of this gallery
-			$images = $this->app->getModel('Picture')->setFilter('id_album={int:id_album}')->setParameter('id_album', $album->id_album)->read();
-
-			// conversion for each image
-			foreach ($images as $image)
-			{
-				// this is for my own gallery and name conversion
-				setlocale(LC_ALL, 'de_DE.utf8');
-
-				// clean up non acscii symbols from the image title
-				$filename = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $image->title);
-
-				$filename = preg_replace('/\%/',' percentage',$filename);
-				$filename = preg_replace('/\@/',' at ',$filename);
-				$filename = preg_replace('/\&/',' and ',$filename);
-				$filename = preg_replace('/\s[\s]+/','-',$filename);    // Strip off multiple spaces
-				$filename = preg_replace('/[\s\W]+/','-',$filename);    // Strip off spaces and non-alpha-numeric
-				$filename = preg_replace('/^[\-]+/','',$filename); // Strip off the starting hyphens
-				$filename = preg_replace('/[\-]+$/','',$filename);
-
-				// create new unique filename with md5 hash out of member id and upload timestamp
-				$filename = $filename .'-' . md5($image->id_member . $image->date_upload) . '.' . pathinfo($image->path, PATHINFO_EXTENSION);
-
-				$path_image = $path_gallery . '/' . $filename;
-
-				// check file existance
-				if (!file_exists($path_image))
-				{
-					// copy image to new place under a new name
-					if (copy($image->path, $path_image))
-					{
-						unlink($image->path);
-						$image->image = $filename;
-						$image->date_update = time();
-
-						if (!$image->type)
-						{
-							$info  = getimagesize($path_image);
-							$image->type  = $info['mime'];
-						}
-					}
-				}
-
-				// thumb
-				$path_image_thumb = $path_thumbs . '/' . $filename;
-
-				if (!file_exists($path_image_thumb))
-				{
-					Image::Resize($path_image, $this->cfg('gallery_thumb_width'), $path_image_thumb, null, 90);
-					echo '<p>thumb created.<p>';
-				}
-
-				// medium size
-				$path_image_medium = $path_medium . '/' . $filename;
-
-				if (!file_exists($path_image_medium))
-				{
-					Image::Resize($path_image, $this->cfg('gallery_medium_width'), $path_image_medium, null, 90);
-					echo '<p>medium created.<p>';
-				}
-
-				$this->app->getModel('Picture')->setData($image)->save();
-			}
-
-			$this->setData($album)->cleanMode('off')->save();
-		}
-	}
-
+	/**
+	 * Returns data for editing a specific album or a new one.
+	 * @param int $id_album Optional album id. Set id means edit, none set means new album.
+	 * @return \Web\Framework\Lib\Data
+	 */
 	public function getEdit($id_album=null)
 	{
 
@@ -339,6 +292,10 @@ class AlbumModel extends Model
 		return $this->data;
 	}
 
+	/**
+	 * Saves album data to db
+	 * @param \Web\Framework\Lib\Data $data
+	 */
 	public function saveAlbum($data)
 	{
 		$stamp = time();
@@ -417,20 +374,38 @@ class AlbumModel extends Model
 		$this->data->date_updated = $stamp;
 		$this->data->id_updater = User::getId();
 
+		if (!isset($this->data->mime_types))
+			$this->data->mime_types = NULL;
+
 		// Any errors?
 		if ($this->hasErrors())
 			return;
 
+		// Save data without any further validation
 		$this->save(false);
 	}
 
+	/**
+	 * Returns the title of one specific album.
+	 * @param int $id_album Id of album
+	 * @return string
+	 */
 	public function getAlbumTitle($id_album)
 	{
-		$this->setField('title');
-		$this->setFilter('id_album={int:id_album}', array('id_album' => $id_album));
-		return $this->read('val');
+		return $this->read(array(
+			'type' => 'val',
+			'field' => 'title',
+			'filter' => 'id_album={int:id_album}',
+			'param' => array(
+				'id_album' => $id_album
+			),
+		));
 	}
 
+	/**
+	 * Returns a list if albums accessible to the current user.
+	 * @return \Web\Framework\Lib\Data
+	 */
 	public function getAlbumList()
 	{
 		$this->setField(array(
@@ -438,7 +413,8 @@ class AlbumModel extends Model
 			'title',
 			'id_member',
 			'accessgroups',
-			'uploadgroups'
+			'uploadgroups',
+			'mime_types',
 		));
 
 		return $this->read('*', array('checkGroupsAccess', 'checkGroupsUpload'));
@@ -456,18 +432,21 @@ class AlbumModel extends Model
 		return $this->cfg('dir_gallery_upload') . '/' . $this->read('val');
 	}
 
+	/**
+	 * Checks for an existing album title
+	 * @param string $title
+	 * @return boolean
+	 */
 	private function checkAlbumTitleExists($title)
 	{
-		$model = $this->app->getModel('Album');
-		$model->setFilter('title={string:title}', array('title' => $title));
-
-		$test = $model->read();
-
-		$num = $model->count();
-
-		return  $num > 0 ? true : false;
+		return $this->getModel()->count('title={string:title}', array('title' => $title)) > 0 ? true : false;
 	}
 
+	/**
+	 * Deletes a specific album and it's pictures
+	 * @param int $id_album Id of album to delete
+	 * @return boolean
+	 */
 	public function deleteAlbum($id_album)
 	{
 		$this->getAlbumInfos($id_album);
@@ -480,7 +459,7 @@ class AlbumModel extends Model
 		else
 		{
 			// Delete all pictures of this album
-			$this->app->getModel('Picture')->deleteAlbumPictures($id_album);
+			$this->getModel('Picture')->deleteAlbumPictures($id_album);
 
 			// Delete album folder
 			$path = $this->cfg('dir_uploads') . '/' . $this->data->dir_name;

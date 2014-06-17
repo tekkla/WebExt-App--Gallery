@@ -7,6 +7,15 @@ use Web\Framework\Lib\Context;
 use Web\Framework\Lib\FileIO;
 use Web\Framework\Helper\FormDesigner;
 
+/**
+ * Album controller
+ * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
+ * @package App Gallery
+ * @subpackage Controller/Album
+ * @license BSD
+ * @copyright 2014 by author
+ * @todo Image edit not working
+ */
 class PictureController extends Controller
 {
 	public function Index($id_picture)
@@ -34,13 +43,13 @@ class PictureController extends Controller
 			'src_thumb' => $this->txt('imgurl_thumb'),
 			'src_medium' => $this->txt('imgurl_medium'),
 		));
-		
+
 		// Add gallery link to linktree
 		$this->addLinktree($this->txt('headline'), Url::factory('gallery_album_index')->getUrl());
-		
+
 		// Add album to linktree
-		$this->addLinktree($this->app->getModel('Album')->getAlbumTitle($picture->id_album), Url::factory('gallery_album_album', array('id_album'=>$picture->id_album))->getUrl());
-		
+		$this->addLinktree($this->model->data->album->title, Url::factory('gallery_album_album', array('id_album'=>$picture->id_album))->getUrl());
+
 		// Add current album to linktree
 		$this->addLinktree($picture->title);
 	}
@@ -73,7 +82,7 @@ class PictureController extends Controller
 			if (!$this->model->hasErrors())
 			{
 				// 	go to action set by model save action
-				$this->Redirect($this->model->data->action, array('id_picture'=>$this->model->data->id_picture));
+				$this->redirect($this->model->data->action, array('id_picture'=>$this->model->data->id_picture));
 				return;
 			}
 		}
@@ -97,10 +106,10 @@ class PictureController extends Controller
 
 		// Use FormDesigner
 		$form = new FormDesigner();
-		
+
 		// With this model
 		$form->attachModel($this->model);
-		
+
 		// some global params
 		$params = array(
 			'id_picture'=> $id_picture
@@ -132,21 +141,30 @@ class PictureController extends Controller
 		// puiblish data to view
 		$this->setVar('edit', $this->model);
 	}
-	
-	public function Upload($id_album=null)
+
+	public function Upload($id_album)
 	{
+		// Load album infos
+		$album = $this->getModel('Album')->getAlbum($id_album);
+
+		// Check for allowed upload
+		if (!isset($album->mime_types))
+		{
+			$this->addMessage($this->txt('album_upload_not_active'), 'danger');
+			$this->redirect(Url::factory('gallery_album_album', array($id_album => $id_album))->getUrl());
+		}
+
 		// Get posted data
 		$post = $this->request->getPost();
-		
+
 		// Save posted data
 		if ($post)
 		{
-			$this->model->saveUploadedPicture($post);
-			
+			$this->model->saveUploadedPicture($post, $id_album);
+
 			if (!$this->model->hasErrors())
 			{
-				$url = Url::factory('gallery_picture', array('id_picture' => $this->model->data->id_picture))->getUrl();
-				redirectexit($url);
+				redirectexit(Url::factory('gallery_picture', array('id_picture' => $this->model->data->id_picture))->getUrl());
 				return;
 			}
 		}
@@ -154,55 +172,70 @@ class PictureController extends Controller
 		// Some texts
 		$this->setVar(array(
 			'headline' => $this->txt('headline'),
+			'title' => $album->title,
+			'album_info' => $album->description,
 			'upload' => $this->txt('upload'),
 			'upload_info' => $this->txt('upload_info'),
 			'optional_info' => $this->txt('optional_info')
 		));
-		
+
 		// Uploadform by FormDesigner
 		$form = new FormDesigner();
 		$form->attachModel($this->model);
-		
+
 		// Create form post action
 		$form->setActionRoute($this->request->getCurrentRoute(), array('id_album' => $id_album));
 
 		// Album selection dropdown
-		
+
 		// Load list of albums
-		$albums = $this->app->getModel('Album')->getAlbumList();
-		
+		$albums = $this->getModel('Album')->getAlbumList();
+
 		// @todo Define exit strategy when use has no access on galleries
 		if (!$albums)
 			return false;
-		
+
 		/* @var $control \Web\Framework\Html\Form\Select */
 		$control = $form->createElement('select', 'id_album');
-		
+
 		foreach ($albums as $album)
 			$control->newOption($album->id_album, $album->title, $id_album == $album->id_album ? 1 : 0);
-		
+
 		// Get the maximum file size for posts
 		$max_upload_size = FileIO::getMaximumFileUploadSize();
-		
+
 		// File upload field
 		$control = $form->createElement('file', 'upload');
-		$control->setDescription(sprintf($this->txt('max_upload_size'), FileIO::convFilesize($max_upload_size), $max_upload_size));
+
+		$description = sprintf($this->txt('max_upload_size'), FileIO::convFilesize($max_upload_size), $max_upload_size);
+
+		$mime_types = function($album) {
+			$out = array();
+			foreach ($album->mime_types as $type)
+				$out[] = str_replace('_', '/', $type);
+
+			return $out;
+		};
+
+		$description .= ' | MIME-Types : ' . implode(', ', $mime_types($album));
+
+		$control->setDescription($description);
 
 		// Optional picture infos
 		$form->createElement('h3', $this->txt('optional'));
 		$form->createElement('p', $this->txt('optional_info'));
 		$form->createElement('text', 'title');
 		$form->createElement('textarea', 'description');
-		
+
 		$this->setVar('form', $form);
-		
+
 		// Add gallery link to linktree
 		Context::addLinktree($this->txt('headline'), Url::factory('gallery_album_index')->getUrl());
-		
+
 		// Add current album to linktree
 		Context::addLinktree($this->txt('upload'));
-		
-		
+
+
 	}
 }
 

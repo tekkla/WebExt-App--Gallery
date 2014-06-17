@@ -1,22 +1,18 @@
 <?php
 namespace Web\Apps\Gallery;
 
-/*******************************************************
- * Gallery App for smf web framework
- *
- * @author Michael Zorn
- * @license GPL
- * @version 0.8
- *******************************************************/
-
 use Web\Framework\Lib\App;
 use Web\Framework\Lib\Url;
 use Web\Framework\Lib\FileIO;
 
-// portal files loaded
-define('Gallery_loaded', true);
-
-
+/**
+ * Gallery app for WebExt framework
+ * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
+ * @package App
+ * @subpackage Gallery
+ * @license BSD
+ * @copyright 2014 by author
+ */
 final class Gallery extends App
 {
 	public $lang = true;
@@ -68,20 +64,7 @@ final class Gallery extends App
 		'upload_mime_types' => array(
 			'group' => 'upload',
 			'control' => 'optiongroup',
-			'data' => array(
-				'array',
-				array(
-					'image/gif',
-					'image/jpeg',
-					'image/png',
-				),
-				1
-			)
-		),
-		'upload_no_overwrite' => array(
-			'group' => 'upload',
-			'control' => 'switch',
-			'default' => 0
+			'data' => array('array', array('image/gif', 'image/jpeg', 'image/png', 'image/bmp'), 1)
 		),
 	);
 

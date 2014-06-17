@@ -9,7 +9,15 @@ use Web\Framework\Helper\FormDesigner;
 use Web\Framework\Html\Controls\UiButton;
 use Web\Framework\Html\Controls\ButtonGroup;
 
-class AlbumController extends Controller
+/**
+ * Album controller
+ * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
+ * @package App Gallery
+ * @subpackage Controller/Album
+ * @license BSD
+ * @copyright 2014 by author
+ */
+final class AlbumController extends Controller
 {
 	public function Edit($id_album=null)
 	{
@@ -23,7 +31,7 @@ class AlbumController extends Controller
 			if (!$this->model->hasErrors())
 			{
 				// 	go to action set by model save action
-				$this->addMessage('Saved', 'success');
+				$this->addMessage($this->txt('album_config_saved'), 'success');
 				redirectexit( Url::factory( $this->request->getCurrentRoute() , array('id_album' => $this->model->data->id_album))->getUrl() );
 			}
 		}
@@ -90,6 +98,38 @@ class AlbumController extends Controller
 		$form->createElement('textarea', 'legalinfo');
 
 		// accesrights
+		$form->openGroup('album_upload');
+
+		$form->createElement('h3', $this->txt('album_headline_upload'));
+
+		// Get mimetypes from app cfg
+		$mime = $this->cfg('upload_mime_types');
+
+		// If we got no mime types, show info that upload is disabled by app config
+		if (!$mime)
+		{
+			$control = $form->createElement('p', $this->txt('album_upload_not_active'));
+			$control->addCss('text-danger');
+		}
+		else
+		{
+			$control = $form->createElement('optiongroup', 'mime_types');
+
+			foreach ($mime as $mime_type)
+			{
+				/* @var $option \Web\Framework\Html\Form\Option */
+				$option = $control->createOption();
+				$option->setValue($mime_type);
+				$option->setInner($mime_type);
+
+				if (isset($this->model->data->mime_types->{$mime_type}))
+					$option->isSelected(1);
+			}
+
+			$control->setDescription($this->txt('mime_type_help'));
+		}
+
+		// accesrights
 		$form->openGroup('album_access');
 
 		$form->createElement('h3', $this->txt('album_headline_access'));
@@ -148,8 +188,6 @@ class AlbumController extends Controller
 
 		// puiblish data to view
 		$this->setVar('edit', $this->model);
-
-		// Create a thumblist of images in this album
 	}
 
 	public function Index($id_album)
@@ -175,7 +213,7 @@ class AlbumController extends Controller
 			$button_group = new ButtonGroup();
 			$button_group->addCss('pull-right');
 
-			if ($album->allow_upload)
+			if ($album->allow_upload && isset($this->model->data->mime_types))
 				$button_group->addButton(
 					UiButton::routeButton(
 						'gallery_picture_upload',
@@ -204,8 +242,8 @@ class AlbumController extends Controller
 						array('id_album' => $id_album)
 					)
 					->setType('imgbutton')
-					->setIcon('edit')
-					->setText($this->txt('album_edit'))
+					->setIcon('trash-o')
+					->setText($this->txt('album_delete'))
 					->setConfirm($this->txt('album_delete'))
 					->addCss('pull-right')
 				);
@@ -243,7 +281,7 @@ class AlbumController extends Controller
 
 		// Create add gallery buttons for gallery admins
 		if ($this->checkAccess('gallery_admin'))
-			$this->setVar('btn_add', UiButton::routeButton('gallery_album_new')->setText($this->txt('album_new'))->addCss('pull-right'));
+			$this->setVar('btn_add', UiButton::routeButton('gallery_album_new')->setIcon('plus')->setText($this->txt('album_new'))->addCss('pull-right'));
 
 		// Add gallery link to linktree
 		Context::addLinktree($this->txt('headline'));
